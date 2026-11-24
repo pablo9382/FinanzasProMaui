@@ -1,0 +1,5 @@
+bin/
+obj/
+.vs/
+*.user
+Paquetes_Distribucion_Directa/*.apk

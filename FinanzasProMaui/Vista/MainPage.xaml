@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FinanzasProMaui.Vista.MainPage"
+             Title="FinanzasPro — Cotizador API &amp; Portafolio SQLite"
+             BackgroundColor="#EEF2F6">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <!-- 1. BANNER EJECUTIVO CON LINEARGRADIENTBRUSH Y SHADOW -->
+            <Border StrokeShape="RoundRectangle 16" StrokeThickness="0" Padding="22,18">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#0F172A" Offset="0.0" />
+                        <GradientStop Color="#1E3A8A" Offset="0.55" />
+                        <GradientStop Color="#0284C7" Offset="1.0" />
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Border.Shadow>
+                    <Shadow Brush="#0F172A" Offset="0,6" Radius="14" Opacity="0.24" />
+                </Border.Shadow>
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="💹 SISTEMA MÓVIL DE COTIZACIÓN FINANCIERA Y GESTIÓN DE PORTAFOLIO"
+                               FontSize="11" FontAttributes="Bold" TextColor="#7DD3FC" CharacterSpacing="1.2" />
+                        <Label Text="FinanzasPro — Monitor de Divisas &amp; Activos Digitales"
+                               FontSize="22" FontAttributes="Bold" TextColor="White" />
+                        <Label Text="Consumo de API REST Financiera en Tiempo Real (CoinLore / Forex API) + Persistencia CRUD en SQLite (BDFinanzas.db)"
+                               FontSize="12.5" TextColor="#E2E8F0" />
+                    </VerticalStackLayout>
+                    <Border Grid.Column="1" StrokeShape="RoundRectangle 12" BackgroundColor="#065F46" Stroke="#34D399" StrokeThickness="1.5" Padding="14,10" VerticalOptions="Center">
+                        <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                            <Label Text="🌐 API REST ACTIVA" FontSize="11" FontAttributes="Bold" TextColor="#A7F3D0" HorizontalTextAlignment="Center" />
+                            <Label Text="1 USD = 6.96 Bs." FontSize="12.5" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center" />
+                            <Label Text="SQLite Conectado" FontSize="10.5" TextColor="#D1FAE5" HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- 2. TARJETAS DE KPIS EN TIEMPO REAL -->
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="14">
+                <Border StrokeShape="RoundRectangle 14" BackgroundColor="White" Stroke="#CBD5E1" Padding="16,12">
+                    <Border.Shadow>
+                        <Shadow Brush="#1E293B" Offset="0,3" Radius="8" Opacity="0.08" />
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="3">
+                        <Label Text="📊 ACTIVOS REGISTRADOS" FontSize="11" FontAttributes="Bold" TextColor="#64748B" />
+                        <Label x:Name="lblKpiTotalActivos" Text="0 Activos" FontSize="22" FontAttributes="Bold" TextColor="#0F172A" />
+                        <Label Text="Almacenados en BDFinanzas.db" FontSize="11" TextColor="#475569" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="1" StrokeShape="RoundRectangle 14" BackgroundColor="White" Stroke="#A7F3D0" Padding="16,12">
+                    <Border.Shadow>
+                        <Shadow Brush="#1E293B" Offset="0,3" Radius="8" Opacity="0.08" />
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="3">
+                        <Label Text="💵 VALOR TOTAL PORTAFOLIO" FontSize="11" FontAttributes="Bold" TextColor="#047857" />
+                        <Label x:Name="lblKpiValorUsd" Text="$us 0.00" FontSize="22" FontAttributes="Bold" TextColor="#059669" />
+                        <Label x:Name="lblKpiValorBs" Text="Equivalente: Bs. 0.00" FontSize="11.5" FontAttributes="Bold" TextColor="#065F46" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="2" StrokeShape="RoundRectangle 14" BackgroundColor="White" Stroke="#BFDBFE" Padding="16,12">
+                    <Border.Shadow>
+                        <Shadow Brush="#1E293B" Offset="0,3" Radius="8" Opacity="0.08" />
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="3">
+                        <Label Text="📈 VARIACIÓN 24H PROMEDIO" FontSize="11" FontAttributes="Bold" TextColor="#1D4ED8" />
+                        <Label x:Name="lblKpiVariacion" Text="+0.00%" FontSize="22" FontAttributes="Bold" TextColor="#1E40AF" />
+                        <Label Text="Rendimiento diario de mercado" FontSize="11" TextColor="#1E3A8A" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- 3. PANEL DE CONEXIÓN A API EXTERNA DE SERVICIOS FINANCIEROS -->
+            <Border StrokeShape="RoundRectangle 16" BackgroundColor="White" Stroke="#CBD5E1" Padding="18">
+                <Border.Shadow>
+                    <Shadow Brush="#1E293B" Offset="0,4" Radius="12" Opacity="0.10" />
+                </Border.Shadow>
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="🌐 CONSULTA EN VIVO A API EXTERNA DE MERCADOS FINANCIEROS"
+                                   FontSize="14" FontAttributes="Bold" TextColor="#0F172A" />
+                            <Label x:Name="lblEstadoApi" Text="Busca un símbolo (BTC, ETH, USDT, SOL, EUR, XAU) o usa los botones rápidos de la API"
+                                   FontSize="12" TextColor="#0284C7" />
+                        </VerticalStackLayout>
+                        <ActivityIndicator x:Name="indicadorApi" Grid.Column="1" IsRunning="False" IsVisible="False" Color="#0284C7" WidthRequest="28" HeightRequest="28" />
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <Entry x:Name="txtBuscarApi" Placeholder="🔍 Escribe un símbolo o activo (ej. BTC, ETH, USDT, SOL, XAU, EUR)..."
+                               FontSize="13" BackgroundColor="#F8FAFC" TextColor="#0F172A" />
+                        <Button Grid.Column="1" Text="🔍 Consultar API REST" Clicked="OnBuscarApiClicked"
+                                BackgroundColor="#0284C7" TextColor="White" FontSize="12.5" FontAttributes="Bold" CornerRadius="10" HeightRequest="42" Padding="18,0" />
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="10">
+                        <Button Text="₿ Top Cripto API" Clicked="OnApiCriptoClicked"
+                                BackgroundColor="#1E3A8A" TextColor="White" FontSize="12" FontAttributes="Bold" CornerRadius="8" HeightRequest="38" />
+                        <Button Grid.Column="1" Text="💵 Divisas &amp; USDT" Clicked="OnApiDivisasClicked"
+                                BackgroundColor="#047857" TextColor="White" FontSize="12" FontAttributes="Bold" CornerRadius="8" HeightRequest="38" />
+                        <Button Grid.Column="2" Text="🥇 Oro &amp; Índices" Clicked="OnApiMetalesClicked"
+                                BackgroundColor="#B45309" TextColor="White" FontSize="12" FontAttributes="Bold" CornerRadius="8" HeightRequest="38" />
+                        <Button Grid.Column="3" Text="⏭️ Siguiente de API" Clicked="OnApiSiguienteClicked"
+                                BackgroundColor="#4F46E5" TextColor="White" FontSize="12" FontAttributes="Bold" CornerRadius="8" HeightRequest="38" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 4. FORMULARIO DE GESTIÓN CRUD + VALIDACIÓN ANTI-DUPLICADOS -->
+            <Border StrokeShape="RoundRectangle 16" BackgroundColor="White" Stroke="#CBD5E1" Padding="18">
+                <Border.Shadow>
+                    <Shadow Brush="#1E293B" Offset="0,4" Radius="12" Opacity="0.10" />
+                </Border.Shadow>
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="💼 REGISTRO Y GESTIÓN DE PORTAFOLIO EN BASE DE DATOS SQLITE (CRUD)"
+                                   FontSize="14" FontAttributes="Bold" TextColor="#0F172A" />
+                            <Label Text="Completa o importa un activo desde la API, o selecciona una fila del Dgv inferior para modificar/eliminar"
+                                   FontSize="12" TextColor="#64748B" />
+                        </VerticalStackLayout>
+                        <Border x:Name="badgeSeleccionDgv" Grid.Column="1" StrokeShape="RoundRectangle 8" BackgroundColor="#FEF3C7" Stroke="#F59E0B" Padding="12,6" IsVisible="False">
+                            <Label x:Name="lblSeleccionDgv" Text="🎯 SELECCIONADO DEL DGV" FontSize="11.5" FontAttributes="Bold" TextColor="#B45309" />
+                        </Border>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="10">
+                        <VerticalStackLayout Spacing="3">
+                            <Label Text="Símbolo / Ticker (API):" FontSize="11.5" FontAttributes="Bold" TextColor="#334155" />
+                            <Entry x:Name="txtSimbolo" Placeholder="Ej. BTC, USDT, XAU" FontSize="13" BackgroundColor="#F8FAFC" TextColor="#0F172A" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="3">
+                            <Label Text="Nombre del Activo Financiero:" FontSize="11.5" FontAttributes="Bold" TextColor="#334155" />
+                            <Entry x:Name="txtNombre" Placeholder="Ej. Bitcoin (BTC)" FontSize="13" BackgroundColor="#F8FAFC" TextColor="#0F172A" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="2" Spacing="3">
+                            <Label Text="Categoría de Mercado:" FontSize="11.5" FontAttributes="Bold" TextColor="#334155" />
+                            <Entry x:Name="txtCategoria" Placeholder="Ej. Criptoactivos / Divisas" FontSize="13" BackgroundColor="#F8FAFC" TextColor="#0F172A" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="1" Spacing="3">
+                            <Label Text="Precio Unitario Spot ($us):" FontSize="11.5" FontAttributes="Bold" TextColor="#334155" />
+                            <Entry x:Name="txtPrecioUsd" Placeholder="Ej. 94850.00" Keyboard="Numeric" TextChanged="OnValoresCambiaron" FontSize="13" BackgroundColor="#F8FAFC" TextColor="#0F172A" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="3">
+                            <Label Text="Cantidad en Portafolio:" FontSize="11.5" FontAttributes="Bold" TextColor="#334155" />
+                            <Entry x:Name="txtCantidad" Placeholder="Ej. 0.25" Keyboard="Numeric" TextChanged="OnValoresCambiaron" FontSize="13" BackgroundColor="#F8FAFC" TextColor="#0F172A" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="2" Spacing="3">
+                            <Label Text="Variación 24h (%) / Notas:" FontSize="11.5" FontAttributes="Bold" TextColor="#334155" />
+                            <Grid ColumnDefinitions="95,*" ColumnSpacing="6">
+                                <Entry x:Name="txtVariacion" Placeholder="+3.5" Keyboard="Numeric" FontSize="13" BackgroundColor="#F8FAFC" TextColor="#0F172A" />
+                                <Entry Grid.Column="1" x:Name="txtNotas" Placeholder="Nota u objetivo de inversión..." FontSize="13" BackgroundColor="#F8FAFC" TextColor="#0F172A" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- VISTA PREVIA DE CÁLCULO EN USD Y BOLIVIANOS -->
+                    <Border StrokeShape="RoundRectangle 10" BackgroundColor="#F0FDF4" Stroke="#86EFAC" Padding="14,10">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label x:Name="lblCalculoVivo" Text="💵 Subtotal Calculado: $us 0.00  |  🇧🇴 Equivalente en Bolivianos: Bs. 0.00"
+                                   FontSize="13" FontAttributes="Bold" TextColor="#065F46" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="Tipo de Cambio: 6.96 Bs/USD" FontSize="11.5" TextColor="#047857" VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+
+                    <!-- BOTONES DE ACCIÓN CRUD -->
+                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="10">
+                        <Button Text="💾 GUARDAR EN SQLITE" Clicked="OnGuardarClicked"
+                                BackgroundColor="#059669" TextColor="White" FontSize="12" FontAttributes="Bold" CornerRadius="8" HeightRequest="42" />
+                        <Button Grid.Column="1" Text="✏️ MODIFICAR SELECCIÓN" Clicked="OnModificarClicked"
+                                BackgroundColor="#D97706" TextColor="White" FontSize="12" FontAttributes="Bold" CornerRadius="8" HeightRequest="42" />
+                        <Button Grid.Column="2" Text="🗑️ ELIMINAR SELECCIÓN" Clicked="OnEliminarClicked"
+                                BackgroundColor="#DC2626" TextColor="White" FontSize="12" FontAttributes="Bold" CornerRadius="8" HeightRequest="42" />
+                        <Button Grid.Column="3" Text="🧹 LIMPIAR CAMPOS" Clicked="OnLimpiarClicked"
+                                BackgroundColor="#475569" TextColor="White" FontSize="12" FontAttributes="Bold" CornerRadius="8" HeightRequest="42" />
+                    </Grid>
+
+                    <!-- 5. TABLA INTERACTIVA DGV -->
+                    <Border StrokeShape="RoundRectangle 10" Stroke="#CBD5E1" BackgroundColor="#F8FAFC" Padding="0">
+                        <VerticalStackLayout Spacing="0">
+                            <!-- CABECERA DEL DGV -->
+                            <Grid ColumnDefinitions="45,80,1.6*,1.2*,1*,0.9*,1.1*,1.1*,0.8*,105" BackgroundColor="#0F172A" Padding="10,10" ColumnSpacing="6">
+                                <Label Text="ID" FontSize="11" FontAttributes="Bold" TextColor="#38BDF8" />
+                                <Label Grid.Column="1" Text="SÍMBOLO" FontSize="11" FontAttributes="Bold" TextColor="White" />
+                                <Label Grid.Column="2" Text="ACTIVO FINANCIERO" FontSize="11" FontAttributes="Bold" TextColor="White" />
+                                <Label Grid.Column="3" Text="CATEGORÍA" FontSize="11" FontAttributes="Bold" TextColor="White" />
+                                <Label Grid.Column="4" Text="PRECIO $us" FontSize="11" FontAttributes="Bold" TextColor="White" />
+                                <Label Grid.Column="5" Text="CANT." FontSize="11" FontAttributes="Bold" TextColor="White" />
+                                <Label Grid.Column="6" Text="TOTAL $us" FontSize="11" FontAttributes="Bold" TextColor="#A7F3D0" />
+                                <Label Grid.Column="7" Text="TOTAL Bs." FontSize="11" FontAttributes="Bold" TextColor="#FDE047" />
+                                <Label Grid.Column="8" Text="24H %" FontSize="11" FontAttributes="Bold" TextColor="White" />
+                                <Label Grid.Column="9" Text="ACCIÓN DGV" FontSize="11" FontAttributes="Bold" TextColor="#FDE047" HorizontalTextAlignment="Center" />
+                            </Grid>
+
+                            <!-- FILAS DINÁMICAS DEL DGV -->
+                            <Grid x:Name="Dgv" ColumnDefinitions="45,80,1.6*,1.2*,1*,0.9*,1.1*,1.1*,0.8*,105" ColumnSpacing="6" RowSpacing="1" BackgroundColor="#E2E8F0" />
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

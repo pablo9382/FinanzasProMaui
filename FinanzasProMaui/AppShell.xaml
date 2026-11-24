@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="FinanzasProMaui.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vista="clr-namespace:FinanzasProMaui.Vista"
+    Title="FinanzasPro — Cotizador API &amp; Portafolio SQLite"
+    Shell.NavBarIsVisible="False">
+
+    <ShellContent
+        Title="Inicio"
+        ContentTemplate="{DataTemplate vista:MainPage}"
+        Route="MainPage" />
+
+</Shell>
